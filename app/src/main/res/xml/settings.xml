@@ -1,29 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Standart options">
+        <SwitchPreference
+            android:key="bootOn"
+            android:summaryOff="Start Service after reboot? No.."
+            android:summaryOn="Start Service after reboot? Yes.."
+            android:switchTextOff="Not"
+            android:switchTextOn="Yes" />
+        <SwitchPreference
+            android:key="wifi"
+            android:summaryOff="Do service use Wifi? No.."
+            android:summaryOn="Do service use Wifi? Yes.."
+            android:switchTextOff="No"
+            android:switchTextOn="Yes" />
+        <SwitchPreference
+            android:key="bluetooth"
+            android:summaryOff="Do service use Bluetooth? No.."
+            android:summaryOn="Do service use Bluetooth? Yes.."
+            android:switchTextOff="No"
+            android:switchTextOn="Yes" />
+        <SwitchPreference
+            android:key="mobileInet"
+            android:summaryOff="Do service use Mobile Internet? No.."
+            android:summaryOn="Do service use Mobile Internet? Yes.."
+            android:switchTextOff="No"
+            android:switchTextOn="Yes" />
+    </PreferenceCategory>
 
-    <SwitchPreference
-        android:key="bootOn"
-        android:summaryOff="Start Service after reboot? No.."
-        android:summaryOn="Start Service after reboot? Yes.."
-        android:switchTextOff="Not"
-        android:switchTextOn="Yes" />
-    
-<EditTextPreference
-    android:key="INTERVAL"
-    android:title="Repeat time of traffic checking :"
-    android:summary="Set value of checking time (30 sec is recommended)"
-    android:defaultValue="30"
-    android:dialogTitle="Please set seconds (from 10 to 60 sec)" />
+    <PreferenceCategory android:title="Advanced users only options">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="displayOn"
+            android:summary="This preference can be true or false"
+            android:title="Skip service when display On" />
 
-<EditTextPreference
-    android:key="SizeToOff"
-    android:title="Set how much traffic we compare to:"
-    android:summary="Set amount traffic of checking  (50 kb is recommended)"
-    android:defaultValue="50"
-    android:dialogTitle="Please set kilotytes (from 30 to 1024 kb)" />
+        <EditTextPreference
+            android:defaultValue="Off"
+            android:dialogTitle="Please set kilobytes from 30 to 1024 (carefully it cause of different behaviour of service):"
+            android:key="SizeToOff"
+            android:summary="Set personal traffic of checking (per min)"
+            android:title="Important! Traffic checking amount" />
 
-    <ListPreference />
-    <RingtonePreference />
-    
+    </PreferenceCategory>
 
 </PreferenceScreen>

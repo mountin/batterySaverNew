@@ -32,9 +32,7 @@ private static int s=0 ;
 	}
 
 	public void run(){
-				
-				
-		 
+
 			try {
 				Log.d("sample", "!Run Curr traf = "+getCurrentTraff()+" . this is MyThread."+s++);
 				checkTraff();
@@ -63,8 +61,6 @@ public static long  getCurrentTraff(){
 
 public void setOffAll(){
 
-
-	
      	ConnectivityManager connectivityManager =  (ConnectivityManager)   MyApp.getContext().getSystemService(Context.CONNECTIVITY_SERVICE); 
 
      	try {
@@ -133,15 +129,10 @@ public void SetUnActiveNetwork(NetworkInfo activeNetwork) throws IllegalAccessEx
     //boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
     WifiManager wifi = (WifiManager) MyApp.getContext().getSystemService(Context.WIFI_SERVICE);
     boolean isWiFi  = wifi.isWifiEnabled();
-    
-    //boolean isBlueTooth = activeNetwork.getType() == ConnectivityManager.TYPE_BLUETOOTH;
-    
-	  
+
     Log.d(LOG_TAG,"Mobile GOING TO BE OFF....."+isMobile);
 	    //if(isMobile)
 	    {
-
-
 		    try { 
 		    	//Log.d(LOG_TAG," Mobile is off! ");
 		    	updateAPN(MyApp.getContext(), false);
@@ -192,18 +183,12 @@ public void checkTraff(){
     		
     		setStraffStart();
     		mesg = "So...Data turned OFF... straffStart = "+straffStart;
-    		
     	}else{
-    		
     		mesg = "So...Data Continue Work...";
     	}
-    	
-    	
-    	
+
     	//Log.d(LOG_TAG, "was - "+straffStart+ "- all traf "+getCurrentTraff()+"  . Now Traffic is "+(getCurrentTraff() - straffStart) + "Kb. / last 15 sec. " + mesg);
-    	  
     	setStraffStart();
-    	
     }
 
 	

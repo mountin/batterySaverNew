@@ -11,26 +11,26 @@
     android:textAlignment="center"
     tools:context="com.example.servtest2.MainActivity$PlaceholderFragment" >
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="match_parent"
+    <Switch
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:onClick="onclick2"
-        android:layout_marginTop="172dp"
-        android:textColor="@color/background_color"
-        android:text="Stop Service" />
+        android:text="Service:"
+        android:textColor="#ffffff"
+        android:id="@+id/switch1"
+        android:layout_marginTop="143dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:checked="false" />
 
-    <Button
-        android:id="@+id/button1"
-        
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        
-        android:layout_marginTop="122dp"
-        android:onClick="onclick"
-        android:text="Start Service"
-        android:textColor="@color/background_color" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="This is activation of Smart Service"
+        android:textColor="#ffffff"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="49dp" />
 
 </RelativeLayout>
