@@ -2,12 +2,24 @@
 <resources>
 
     <string name="app_name">Battery Saver</string>
-    <string name="action_settings">Settrings</string>
+    <string name="action_settings">Preferences</string>
     <color name="background_color">#000000</color>
     <color name="text_color">#a0a0a0</color>
     <color name="white">#a0a0a0</color>
     <string name="wifi_title">Wi-Fi</string>
 <string name="settings_title">Settings</string>
+    <string name="ActivationSerice">Service will be checking internet every 2 min</string>
+    <string name="DisActivationSerice">Service is disabled</string>
 
+    <string-array name="entries">
+        <item>one</item>
+        <item>two</item>
+        <item>three</item>
+    </string-array>
+    <string-array name="entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 
 </resources>

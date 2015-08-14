@@ -17,8 +17,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import hhh.yyy.servtest2.MainActivity;
-import hhh.yyy.servtest2.MyApp;
-import hhh.yyy.servtest2.ServiceExample;
 
 
 public class BackgroundService extends Service {
@@ -26,11 +24,12 @@ public class BackgroundService extends Service {
     private boolean isRunning;
     private Context context;
     private Thread backgroundThread;
-    public static long SizeToOff = 25;//kb
+    public static long SizeToOff = 50;//kb
     static public long straffStart; //all traff from start app
     public static TrafficStats stats = new TrafficStats();
 
-    public static String[] optionPairs = "key1=value1;key2=value2;key3=value3".split(";");
+    public static String optionPairs;
+    public static String baseOptionPairs = "wifi=true;bluetooth=true;mobileInet=true;bootOn=true;displayOn=false;SizeToOff=50";
 
     static public void setStraffStart() {
         straffStart = (long) (stats.getTotalRxBytes() / 1024);
@@ -67,22 +66,22 @@ public class BackgroundService extends Service {
             WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
             Log.d("asd", " is WIFI: " + wifi);
 
-            if (wifi.isWifiEnabled()) {
+            if (wifi.isWifiEnabled() && (Boolean.parseBoolean(getOptionValue("wifi")))) {
                 Log.d("asd", "setting WIFI OFF...");
                 wifi.setWifiEnabled(false);
             } else {
                 Log.d("asd", "WIFI is DIsabled!!!");
             }
-            if (bluemm.isEnabled()) {
+            if (bluemm.isEnabled() && (Boolean.parseBoolean(getOptionValue("bluetooth")))) {
                 bluemm.disable();
             }
-            if (activeNetwork != null) {
+            if (activeNetwork != null && (Boolean.parseBoolean(getOptionValue("mobileInet")))) {
                 updateAPN(this, false);
             } else {
                 Log.d("asd", "Network is NOT connected! ");
             }
 
-        }  catch (Exception e) {
+        } catch (Exception e) {
             Log.d("asd", e.toString());
             // TODO: handle exception
         }
@@ -141,52 +140,48 @@ public class BackgroundService extends Service {
     private Runnable myTask = new Runnable() {
 
         public void run() {
-            Log.d("asd", "This is new Runnable() work!!!");
+            Log.d("asd", "This is new Runnable() Battery work!!!");
 
             //Get Preferenece localisation
             SharedPreferences sharedpreferences = getBaseContext().getSharedPreferences(MainActivity.SPLANG, Context.MODE_PRIVATE);
-            String stats = sharedpreferences.getString(MainActivity.SPLANG, "");
-            String sizeToOff = sharedpreferences.getString(MainActivity.SIZETOOFF, "");
-            String isActive = sharedpreferences.getString(MainActivity.ISACTIVE, "");
-            String optionPairsFromFile = sharedpreferences.getString(MainActivity.OPTIONPAIRS, "");
+            Boolean isActive = Boolean.valueOf(sharedpreferences.getString(MainActivity.ISACTIVE, ""));
 
-            //BackgroundService.optionPairs = optionPairsFromFile.split(";");
+            if (!isActive) {
+                Log.d("asd", "Service is DISABLED!");
+                stopSelf();
+            } else {
 
-            if(optionPairsFromFile != null) {
-                for (String kvPair : optionPairs) {
-                    String[] kv = kvPair.split("=");
-                    String key = kv[0];
-                    String value = kv[1];
+                BackgroundService.optionPairs = sharedpreferences.getString(MainActivity.OPTIONPAIRS, "");
+                Log.d("asdd", "baseOptionPairs is=" + baseOptionPairs);
 
-                    if (key.equals("bluetooth")) {
-
-                    }
-                    if (key.equals("wifi")) {
-
-                    }
-                    if (key.equals("mobile")) {
-
-                    }
-                    if (key.equals("displayOn")) {
-
-                    }
+                if (BackgroundService.optionPairs == "") {
+                    BackgroundService.optionPairs = BackgroundService.baseOptionPairs;
+                    Log.d("asdd", "optionPairs is=''");
                 }
+
+                checkTraff();
+
+                stopSelf();
             }
 
-            Log.d("asd", "stats from Service=" + stats);
-            Log.d("asd", "sizeToOff from Service=" + sizeToOff);
-
-            System.out.println("Run servuce!!!");
-            checkTraff();
-
-            stopSelf();
         }
 
-//        public void setStraffStart() {
-//            straffStart = (long) (stats.getTotalRxBytes() / 1024);
-//            Log.d("sample", "WE SETT straffStart is " + straffStart);
-//        }
     };
+
+    public String getOptionValue(String keyOption) {
+        if (BackgroundService.optionPairs != null) {
+            String[] kvPairs = BackgroundService.optionPairs.split(";");
+            for (String kvPair : kvPairs) {
+                String[] kv = kvPair.split("=");
+                String key = kv[0];
+                String value = kv[1];
+                if (key.equals(keyOption)) {
+                    return value;
+                }
+            }
+        }
+        return null;
+    }
 
     @Override
     public void onDestroy() {

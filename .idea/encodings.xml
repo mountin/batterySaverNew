@@ -4,6 +4,7 @@
     <file url="file://$PROJECT_DIR$/app/src/main/java/cronService/AlarmReceiver.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/cronService/BackgroundService.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/cronService/BootBroadcast.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/hhh/yyy/servtest2/PrefActivity.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-ldpi/background.png" charset="UTF-8" />
   </component>
 </project>

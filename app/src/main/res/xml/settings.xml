@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="Standart options">
         <SwitchPreference
-            android:key="bootOn"
+            android:key="bootOn2"
             android:summaryOff="Start Service after reboot? No.."
             android:summaryOn="Start Service after reboot? Yes.."
             android:switchTextOff="Not"

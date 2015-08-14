@@ -16,26 +16,35 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
+
+import java.util.zip.Inflater;
 
 import cronService.AlarmReceiver;
+import yyy.hhh.servtest2.R;
 
-public class MainActivity extends ActionBarActivity implements OnSharedPreferenceChangeListener {
+public class MainActivity extends ActionBarActivity  {
 
     private MainActivity context;
-    final public static int CHECKTIMER = 5000;//5 sec
+    final public static int CHECKTIMER = 120000;//2.2 min
+    //final public static int CHECKTIMER = 15000;//2.2 min
     public static SharedPreferences sharedpreferences;
 
     final public static String SPLANG = "baterSaver";
     final public static String SIZETOOFF = "SizeToOff";
     final public static String ISACTIVE = "isActive";
     final public static String OPTIONPAIRS = "optionPairs";
-    public static String optionPairs;// = "key1=value1;key2=value2;key3=value3";
+    public static String optionPairs;
+    public static SharedPreferences.Editor editor;
 
     boolean CheckboxPreference;
     String ListPreference;
@@ -52,31 +61,56 @@ public class MainActivity extends ActionBarActivity implements OnSharedPreferenc
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment()).commit();
-        }
+//        if (savedInstanceState == null) {
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.container, new PlaceholderFragment()).commit();
+//        }
+
 
         //Get Preferenece localisation
         MainActivity.sharedpreferences = getBaseContext().getSharedPreferences(SPLANG, Context.MODE_PRIVATE);
 
         String stats = sharedpreferences.getString(SPLANG, "");
         String sizeToOff = sharedpreferences.getString(SIZETOOFF, "");
-        String isActive = sharedpreferences.getString(ISACTIVE, "");
+        //String isActive = sharedpreferences.getString(ISACTIVE, "");
+        Boolean isActive = Boolean.valueOf(sharedpreferences.getString(ISACTIVE, ""));
         MainActivity.optionPairs = MainActivity.sharedpreferences.getString(OPTIONPAIRS, "");
+        editor = sharedpreferences.edit();
 
         Log.d("asd", "stats=" + stats);
         Log.d("asd", "sizeToOff=" + sizeToOff);
 
-        if (stats.isEmpty()) {
-            Log.d("asd", "Saving data to Files");
-            SharedPreferences.Editor editor = sharedpreferences.edit();
+//        if (stats.isEmpty()) {
+//            Log.d("asd", "Saving data to Files");
+//            editor.putString(MainActivity.SPLANG, this.getStraffStart());
+//            editor.putString(MainActivity.SIZETOOFF, "50");//kb
+//        }
 
-            editor.putString(MainActivity.SPLANG, this.getStraffStart());
-            editor.putString(MainActivity.SIZETOOFF, "50");//kb
-            editor.putString(MainActivity.ISACTIVE, "true");
-            editor.commit();
-        }
+
+        Switch mySwitch = (Switch) findViewById(R.id.switch1);
+
+        mySwitch.setChecked(isActive);
+
+        mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.d("Switch State=", "" + isChecked);
+                MainActivity.editor.putString(MainActivity.ISACTIVE, String.valueOf(isChecked));
+                MainActivity.editor.commit();
+                if (isChecked) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.ActivationSerice), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.DisActivationSerice), Toast.LENGTH_LONG).show();
+                }
+            }
+
+        });
+//        mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                Log.d("asdd", "switch Checheckd!");
+//            }
+//        });
 
         Log.d("asd1", "stats saved=" + stats);
         Log.d("asd1", "sizeToOff saved=" + sizeToOff);
@@ -97,6 +131,7 @@ public class MainActivity extends ActionBarActivity implements OnSharedPreferenc
 
     }
 
+
     public String getOptionValue(String keyOption){
 
         if(MainActivity.optionPairs != null) {
@@ -112,22 +147,15 @@ public class MainActivity extends ActionBarActivity implements OnSharedPreferenc
         return null;
     }
     private void getPrefs() {
-        // Get the xml/preferences.xml preferences
-
 
         SharedPreferences prefs = PreferenceManager
-                .getSharedPreferences(SPLANG, Context.MODE_PRIVATE);
-                //.getDefaultSharedPreferences(getBaseContext());
+                //.getSharedPreferences(SPLANG, Context.MODE_PRIVATE);
+                .getDefaultSharedPreferences(getBaseContext());
         CheckboxPreference = prefs.getBoolean("checkboxPref", Boolean.parseBoolean(getOptionValue("displayOn")));
 
 
         //ListPreference = prefs.getString("listPref", "nr1");
         editTextPreference = prefs.getString("SizeToOff", (getOptionValue("SizeToOff")));
-
-        SwitchPreference = prefs.getBoolean("mobileInet", Boolean.parseBoolean(getOptionValue("mobileInet")));
-        SwitchPreference = prefs.getBoolean("bluetooth", Boolean.parseBoolean(getOptionValue("bluetooth")));
-        SwitchPreference = prefs.getBoolean("wifi", Boolean.parseBoolean(getOptionValue("wifi")));
-        SwitchPreference = prefs.getBoolean("bootOn", Boolean.parseBoolean(getOptionValue("bootOn")));
 
         // Get the custom preference
         SharedPreferences mySharedPreferences = getSharedPreferences(
@@ -142,23 +170,19 @@ public class MainActivity extends ActionBarActivity implements OnSharedPreferenc
     }
 
     public void showSettings() {
-        Intent i = new Intent(this, Prefs.class);
+        Intent i = new Intent(this, PrefActivity.class);
         startActivity(i);
     }
 
-    public void onclick(View v) {
 
-        Log.v(this.getClass().getName(), "onClick: Starting service!");
-        startService(new Intent(this, ServiceExample.class));
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-
-        //getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//
+//
+//
+//        //getMenuInflater().inflate(R.menu.main, menu);
+//        //return true;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -166,6 +190,8 @@ public class MainActivity extends ActionBarActivity implements OnSharedPreferenc
         if (id == R.id.action_settings) {
             showSettings();
         }
+//        Intent i = new Intent(this, PrefActivity.class);
+//        startActivity(i);
         return super.onOptionsItemSelected(item);
     }
 
@@ -180,41 +206,22 @@ public class MainActivity extends ActionBarActivity implements OnSharedPreferenc
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container,
+            View rootView = inflater.inflate(R.layout.activity_main, container,
                     false);
             return rootView;
         }
     }
 
+
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+    public boolean onCreateOptionsMenu(Menu menu) {
 
-        Log.v(this.getClass().getName(), "Pref=" + prefs.getAll() + "; key=" + key);
+        MenuInflater inflater = getMenuInflater();
+        //MenuItem mi = menu.add(0, 1, 0, "Setting");
+        //mi.setIntent(new Intent(this, PrefActivity.class));
 
-        switch (key) {
-            case "bootOn":
-                prefs.getBoolean("bootOn", true);
-                break;
-            case "INTERVAL":
-                String inter = prefs.getString("INTERVAL", "30");
-
-                ServiceExample.INTERVAL = Integer.parseInt(inter) * 1000;
-                //Log.v(this.getClass().getName(), "interv="+prefs.getInt("INTERVAL", 30)+"; key="+key);
-
-                break;
-            case "SizeToOff":
-                String sizeoff = prefs.getString("SizeToOff", "30");
-
-                ServiceExample.SizeToOff = Integer.parseInt(sizeoff);
-                //Log.v(this.getClass().getName(), "SizeToOff="+prefs.getInt("SizeToOff", 30)+"; key="+key);
-                break;
-
-            default:
-                break;
-        }
-
-        //ReStartServices();
-
+        inflater.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
 }
