@@ -30,7 +30,7 @@ import android.widget.Toast;
 import java.util.zip.Inflater;
 
 import cronService.AlarmReceiver;
-import yyy.hhh.servtest2.R;
+
 
 public class MainActivity extends ActionBarActivity  {
 
